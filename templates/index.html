@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}TrustVault — Private by design{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="eyebrow">PRIVATE DOCUMENT WORKSPACE</div>
+  <h1>Share files with confidence.<br><span>Keep a record of every access.</span></h1>
+  <p class="hero-copy">TrustVault encrypts uploaded files, lets you grant access to specific accounts, and records important actions in an audit trail.</p>
+  <div class="hero-actions"><a class="button primary" href="{{ url_for('register') }}">Get started</a><a class="button secondary" href="{{ url_for('login') }}">Sign in</a></div>
+  <div class="feature-grid">
+    <article class="feature"><div class="feature-symbol">⌁</div><h3>Encrypted storage</h3><p>Uploaded file contents are encrypted before they are saved to disk.</p></article>
+    <article class="feature"><div class="feature-symbol">♙</div><h3>Permission-based</h3><p>Share with a registered user and choose read or download access.</p></article>
+    <article class="feature"><div class="feature-symbol">≋</div><h3>Audit trail</h3><p>Review sign-ins, uploads, sharing changes, reads, and downloads.</p></article>
+  </div>
+</section>
+<div class="notice"><b>Demo notice:</b> This is a hiring-challenge MVP. Review the security notes in README before deploying publicly.</div>
+{% endblock %}

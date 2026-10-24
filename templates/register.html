@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Create account · TrustVault{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <div class="eyebrow">START YOUR WORKSPACE</div><h1>Create account</h1><p class="muted">Use a unique username and a password of at least 8 characters.</p>
+  <form method="post">
+    <label>Username<input name="username" required autocomplete="username" minlength="3" maxlength="80"></label>
+    <label>Password<input type="password" name="password" required autocomplete="new-password" minlength="8"></label>
+    <button class="button primary full" type="submit">Create account</button>
+  </form>
+  <p class="auth-bottom">Already registered? <a href="{{ url_for('login') }}">Sign in</a></p>
+</section>
+{% endblock %}

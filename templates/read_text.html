@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Read {{ doc.original_name }} · TrustVault{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('document_detail', doc_id=doc.id) }}">← Back to document</a>
+<section class="panel"><div class="eyebrow">AUDITED DOCUMENT VIEW</div><h1>{{ doc.original_name }}</h1><p class="muted">This view was recorded in the audit trail.</p><pre class="text-document">{{ content }}</pre></section>
+{% endblock %}

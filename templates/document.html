@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ doc.original_name }} · TrustVault{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('dashboard') }}">← Back to dashboard</a>
+<section class="panel detail-panel">
+  <div class="detail-heading"><div><div class="eyebrow">DOCUMENT DETAILS</div><h1>{{ doc.original_name }}</h1><p class="muted">Owned by {{ doc.owner_name }}</p></div><span class="status">{{ 'OWNER' if doc.owner_id == logged_in_user.id else 'SHARED ACCESS' }}</span></div>
+  <div class="metadata-grid">
+    <div><span>File size</span><b>{{ (doc.size_bytes / 1024)|round(1) }} KB</b></div>
+    <div><span>Uploaded</span><b>{{ doc.created_at[:10] }}</b></div>
+    <div><span>Encryption</span><b>Fernet / AES</b></div>
+  </div>
+  <div class="hash-box"><span>SHA-256 integrity hash</span><code>{{ doc.sha256 }}</code></div>
+  <div class="action-row">
+    <a class="button primary" href="{{ url_for('read_document', doc_id=doc.id) }}">Read / open</a>
+    {% if doc.owner_id == logged_in_user.id or doc.shared_permission == 'download' %}
+      <a class="button secondary" href="{{ url_for('download_document', doc_id=doc.id) }}">Download file</a>
+    {% endif %}
+  </div>
+</section>
+{% if doc.owner_id == logged_in_user.id %}
+<section class="panel">
+  <h2>Share access</h2><p class="muted">Only registered users can receive access. Existing access is updated if shared again.</p>
+  {% if users %}
+  <form class="share-form" method="post" action="{{ url_for('share') }}">
+    <input type="hidden" name="document_id" value="{{ doc.id }}">
+    <label>Share with<select name="recipient_id" required>{% for user in users %}<option value="{{ user.id }}">{{ user.username }}</option>{% endfor %}</select></label>
+    <label>Permission<select name="permission"><option value="read">Read (view text / open file)</option><option value="download">Download</option></select></label>
+    <button class="button primary" type="submit">Grant access</button>
+  </form>
+  {% else %}<p class="empty-state compact">Create another account to test sharing.</p>{% endif %}
+  <div class="section-title share-title"><h2>Current access</h2><span class="count">{{ shares|length }} users</span></div>
+  {% if shares %}
+  <div class="table-wrap"><table><thead><tr><th>User</th><th>Permission</th><th>Granted</th><th></th></tr></thead><tbody>
+  {% for share in shares %}<tr><td>{{ share.username }}</td><td><span class="permission">{{ share.permission }}</span></td><td>{{ share.created_at[:10] }}</td><td><form method="post" action="{{ url_for('revoke', share_id=share.share_id) }}" onsubmit="return confirm('Revoke this user’s access?')"><button class="text-button danger-text" type="submit">Revoke</button></form></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<p class="muted">No one has access to this document yet.</p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

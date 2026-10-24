@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Audit trail · TrustVault{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ACCOUNTABILITY</div><h1>Audit trail</h1><p class="muted">Recent activity related to your account and documents you own.</p></div><span class="count">Latest 500 events</span></div>
+<section class="panel">
+  {% if rows %}
+  <div class="table-wrap"><table><thead><tr><th>Time (UTC)</th><th>Actor</th><th>Action</th><th>Document</th><th>Details</th><th>IP address</th></tr></thead><tbody>
+  {% for row in rows %}<tr><td class="nowrap">{{ row.created_at[:19].replace('T', ' ') }}</td><td>{{ row.username or 'Unknown' }}</td><td><span class="action-tag">{{ row.action }}</span></td><td>{{ row.original_name or '—' }}</td><td>{{ row.details }}</td><td>{{ row.ip_address }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty-state"><h3>No activity recorded</h3><p>Upload a document or perform an action to see audit events.</p></div>{% endif %}
+</section>
+{% endblock %}

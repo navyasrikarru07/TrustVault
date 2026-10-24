@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · TrustVault{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR WORKSPACE</div><h1>Document dashboard</h1><p class="muted">Your files stay private until you grant access.</p></div><a class="button secondary" href="{{ url_for('audit') }}">View audit trail ↗</a></div>
+<section class="panel upload-panel">
+  <div><h2>Upload a document</h2><p class="muted">Up to 15 MB. File contents are encrypted before storage.</p></div>
+  <form class="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="document" required accept=".pdf,.txt,.doc,.docx,.png,.jpg,.jpeg,.xlsx,.csv">
+    <button class="button primary" type="submit">Upload securely</button>
+  </form>
+</section>
+<section class="section-block">
+  <div class="section-title"><h2>My documents</h2><span class="count">{{ owned|length }} files</span></div>
+  {% if owned %}
+  <div class="document-grid">
+    {% for doc in owned %}
+    <article class="doc-card">
+      <div class="doc-top"><span class="file-icon">▤</span><span class="status">OWNER</span></div>
+      <h3>{{ doc.original_name }}</h3><p class="muted small">{{ (doc.size_bytes / 1024)|round(1) }} KB · {{ doc.created_at[:10] }}</p>
+      <p class="small">{{ doc.share_count }} active share(s)</p>
+      <a class="button secondary full" href="{{ url_for('document_detail', doc_id=doc.id) }}">Manage document</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">▤</div><h3>No documents yet</h3><p>Upload your first file to start using TrustVault.</p></div>
+  {% endif %}
+</section>
+<section class="section-block">
+  <div class="section-title"><h2>Shared with me</h2><span class="count">{{ shared|length }} files</span></div>
+  {% if shared %}
+  <div class="document-grid">
+    {% for doc in shared %}
+    <article class="doc-card">
+      <div class="doc-top"><span class="file-icon">▤</span><span class="status shared">SHARED</span></div>
+      <h3>{{ doc.original_name }}</h3><p class="muted small">Owner: {{ doc.owner_name }}</p>
+      <p class="small">Permission: <b>{{ doc.shared_permission }}</b></p>
+      <a class="button secondary full" href="{{ url_for('document_detail', doc_id=doc.id) }}">Open document</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state compact"><p>No documents have been shared with you yet.</p></div>
+  {% endif %}
+</section>
+{% endblock %}
